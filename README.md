@@ -80,7 +80,7 @@ for _ in range(step_limit):
 ```
 ---
 
-From `s01.agen`:
+From `s01.agen` (examples from https://github.com/shareAI-lab/learn-claude-code):
 ```
 (messages=■, response=◆)
     (■=Ø) ➜ ■=[{role:user, content:{query}}], phase=model
