@@ -1,5 +1,5 @@
-(messages=■, response=◆)
-    (■=Ø) ➜ ■=[{role:user, content:{query}}], phase=model
+(messages=■, response=◆, rounds_since_todo=◀)
+    (■=Ø) ➜ ■=[{role:user, content:{query}}], phase=model, ◀=0
 
     (phase=model)
         (◆=Ø) ➜ ◆={QUERY(messages=■)}
@@ -10,8 +10,10 @@
     (phase=tool)
         (i≠{len(◆.content)}, ◆.content.{i}=▲, output=▼)
             (▲.type≠tool_use) ➜ i+=1
-            (▼=Ø) ➜ ▼={BASH(command={▲.input.command})}
+            (▼=Ø) ➜ ▼={DISPATCH(name={▲.name}, input={▲.input})}
             results+=[{type:tool_result, tool_use_id:{▲.id}, content:▼}]
             ▼=Ø, i+=1
+            (▲.name=todo) ➜ ◀=-1
         ■+=[{role:user, content:{results}}]
-        phase=model, ◆=Ø
+        phase=model, ◆=Ø, ◀+=1
+        (◀>=3) ➜ results.insert(0, {type:text, text:<reminder>Update your todos.</reminder>})

@@ -94,14 +94,13 @@ From `s01.agen`:
         phase=done
 
     (phase=tool)
-        (i={len(◆.content)})
-            ■+=[{role:user, content:{results}}]
-            phase=model, ◆=Ø
-        (◆.content.{i}=▲, output=▼)
+        (i≠{len(◆.content)}, ◆.content.{i}=▲, output=▼)
             (▲.type≠tool_use) ➜ i+=1
-            (▼=Ø) ➜ output={BASH(command={▲.input.command})}
+            (▼=Ø) ➜ ▼={BASH(command={▲.input.command})}
             results+=[{type:tool_result, tool_use_id:{▲.id}, content:▼}]
             ▼=Ø, i+=1
+        ■+=[{role:user, content:{results}}]
+        phase=model, ◆=Ø
 ```
 
 The corresponding Python version:
@@ -122,16 +121,16 @@ for _ in range(step_limit):
         phase = "done"; continue
 
     if phase == "tool":
-        if i == len(response.content):
-            messages += [{"role": "user", "content": results}]
-            phase = "model"; response = None; continue
+        if i != len(response.content):
+            if response.content[i]["type"] != "tool_use":
+                i += 1; continue
 
-        if response.content[i]["type"] != "tool_use":
-            i += 1; continue
+            if output is None:
+                output = BASH(command=response.content[i]["input"]["command"]); continue
 
-        if output is None:
-            output = BASH(command=response.content[i]["input"]["command"]); continue
+            results += [{"type": "tool_result", "tool_use_id": response.content[i]["id"], "content": output}]
+            output = None; i += 1; continue
 
-        results += [{"type": "tool_result", "tool_use_id": response.content[i]["id"], "content": output}]
-        output = None; i += 1; continue
+        messages += [{"role": "user", "content": results}]
+        phase = "model"; response = None; continue
 ```
