@@ -161,7 +161,8 @@ def _find_matching(text: str, start: int, opening: str, closing: str) -> int:
 
 def _split_top_level_once(text: str, delimiter: str) -> tuple[str, str] | None:
     for i, ch in _iter_top_level(text):
-        if ch == delimiter: return text[:i], text[i + 1 :]
+        if text.startswith(delimiter, i):
+            return text[:i], text[i + len(delimiter) :]
     return None
 
 def _rewrite_unquoted(text: str, replacer) -> str:
@@ -289,14 +290,12 @@ def _rewrite_value_expr(text: str, slot_names: dict[str, str]) -> str:
     return _replace_slot_symbol(_rewrite_dsl_value_syntax(stripped, slot_names), slot_names)
 
 def _rewrite_assignment_rhs(text: str, op: str, slot_names: dict[str, str]) -> str:
-    split = _split_top_level_once(text, "=" if op == "=" else op[0])
+    split = _split_top_level_once(text, op)
     if split is None:
         return text
     lhs, rhs = split
-    if op in ("+=", "-="):
-        if not rhs.startswith("="):
-            return text
-        rhs = rhs[1:]
+    if not lhs.strip():
+        return text
     if lhs.rstrip().endswith(("=", "!", "<", ">", "+", "-", "*", "/", "%")):
         return text
     lhs = _replace_slot_symbol(_rewrite_dsl_value_syntax(lhs.strip(), slot_names), slot_names)
